@@ -1,27 +1,22 @@
-# ЗАДАЧА 4: Асинхронная обработка исключений
-
-# ДАНО:
-# - Два числа `a` и `b`
-# - Список пар чисел для деления
-
-# ЧТО НУЖНО СДЕЛАТЬ:
-# - Написать корутину `safe_divide(a, b)`, которая:
-#     → делает паузу 0.1 секунды
-#     → пытается вернуть результат деления a / b
-#     → если деление невозможно (ZeroDivisionError) — вернуть строку "Ошибка деления"
-
-# - Написать функцию `run_divisions()`, которая:
-#     → запускает несколько вызовов safe_divide параллельно
-#     → собирает и возвращает список результатов
-
-# ПРИМЕР:
-# >>> await run_divisions()
-# [5.0, "Ошибка деления", 2.0]
 import asyncio
+
+ERROR_TEXT = 'Ошибка деления'
+PAUSE_TIME = 0.1
 
 
 async def safe_divide(a, b):
-    pass
+    await asyncio.sleep(PAUSE_TIME)
+    try:
+        return a / b
+    except ZeroDivisionError:
+        return ERROR_TEXT
+
 
 async def run_divisions():
-    pass
+    attempts = [
+        safe_divide(10, 2),
+        safe_divide(10, 0),
+        safe_divide(10, 5),
+    ]
+    results = await asyncio.gather(*attempts)
+    return results
